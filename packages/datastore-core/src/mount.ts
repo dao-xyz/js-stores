@@ -108,7 +108,7 @@ export class MountDatastore extends BaseDatastore {
     }
   }
 
-  query (q: Query, options?: AbortOptions): AsyncIterable<Pair> {
+  query (q: Query, options?: AbortOptions): AsyncGenerator<Pair> {
     const qs = this.mounts.map(m => {
       return m.datastore.query({
         prefix: q.prefix,
@@ -126,10 +126,14 @@ export class MountDatastore extends BaseDatastore {
     }
     if (q.limit != null) it = take(it, q.limit)
 
-    return it
+    const iterable = it
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 
-  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncIterable<Key> {
+  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncGenerator<Key> {
     const qs = this.mounts.map(m => {
       return m.datastore.queryKeys({
         prefix: q.prefix,
@@ -137,7 +141,6 @@ export class MountDatastore extends BaseDatastore {
       }, options)
     })
 
-    /** @type AsyncIterable<Key> */
     let it = merge(...qs)
     if (q.filters != null) q.filters.forEach(f => { it = filter(it, f) })
     if (q.orders != null) q.orders.forEach(o => { it = sort(it, o) })
@@ -148,6 +151,10 @@ export class MountDatastore extends BaseDatastore {
     }
     if (q.limit != null) it = take(it, q.limit)
 
-    return it
+    const iterable = it
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 }

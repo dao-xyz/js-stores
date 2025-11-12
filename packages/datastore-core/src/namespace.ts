@@ -37,7 +37,7 @@ export class NamespaceDatastore extends KeyTransformDatastore {
     this.iKey = prefix
   }
 
-  query (q: Query, options?: AbortOptions): AsyncIterable<Pair> {
+  query (q: Query, options?: AbortOptions): AsyncGenerator<Pair> {
     const query: Query = {
       ...q
     }
@@ -65,15 +65,19 @@ export class NamespaceDatastore extends KeyTransformDatastore {
 
     query.filters.unshift(({ key }) => this.iKey.isAncestorOf(key))
 
-    return map(this.iChild.query(query, options), ({ key, value }) => {
+    const iterable = map(this.iChild.query(query, options), ({ key, value }) => {
       return {
         key: this.transform.invert(key),
         value
       }
     })
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 
-  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncIterable<Key> {
+  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncGenerator<Key> {
     const query = {
       ...q
     }
@@ -101,8 +105,12 @@ export class NamespaceDatastore extends KeyTransformDatastore {
 
     query.filters.unshift(key => this.iKey.isAncestorOf(key))
 
-    return map(this.iChild.queryKeys(query, options), key => {
+    const iterable = map(this.iChild.queryKeys(query, options), key => {
       return this.transform.invert(key)
     })
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 }

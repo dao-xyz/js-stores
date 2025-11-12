@@ -127,7 +127,7 @@ export class LevelBlockstore extends BaseBlockstore {
     await this.db.close()
   }
 
-  async * getAll (options?: AbortOptions | undefined): AwaitIterable<Pair> {
+  async * getAll (options?: AbortOptions | undefined): AsyncGenerator<Pair> {
     for await (const { key, value } of this.#query({ values: true })) {
       yield { cid: this.#decode(key), block: value }
     }

@@ -11,6 +11,11 @@ import { FlatDirectory, NextToLast } from '../src/sharding.js'
 
 const utf8Encoder = new TextEncoder()
 
+type WorkerApi = {
+  isReady: (path: string) => Promise<boolean>
+  put: (cidString: string, value: Uint8Array) => Promise<void>
+}
+
 describe('FsBlockstore', () => {
   describe('construction', () => {
     it('defaults - folder missing', async () => {
@@ -168,7 +173,7 @@ describe('FsBlockstore', () => {
     const dir = path.join(os.tmpdir(), `test-${Math.random()}`)
     const key = CID.parse('QmeimKZyjcBnuXmAD9zMnSjM9JodTbgGT3gutofkTqz9rE')
     const workers = await Promise.all(new Array(10).fill(0).map(async () => {
-      const worker = await spawn(new Worker('./fixtures/writer-worker.js'))
+      const worker = await spawn<WorkerApi>(new Worker('./fixtures/writer-worker.js'))
       await worker.isReady(dir)
       return worker
     }))

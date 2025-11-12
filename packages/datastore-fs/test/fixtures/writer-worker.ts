@@ -4,7 +4,7 @@ import { FsDatastore } from '../../src/index.js'
 
 let fs: FsDatastore
 expose({
-  async isReady (path) {
+  async isReady (path: string) {
     fs = new FsDatastore(path)
     try {
       await fs.open()
@@ -15,7 +15,7 @@ expose({
       throw err
     }
   },
-  async put (keyString, value) {
+  async put (keyString: string, value: Uint8Array) {
     const key = new Key(keyString)
     try {
       return await fs.put(key, value)

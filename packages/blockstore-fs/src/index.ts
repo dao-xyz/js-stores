@@ -153,7 +153,7 @@ export class FsBlockstore implements Blockstore {
     }
   }
 
-  async * putMany (source: AwaitIterable<Pair>): AsyncIterable<CID> {
+  async * putMany (source: AwaitIterable<Pair>): AsyncGenerator<CID> {
     yield * parallelBatch(
       map(source, ({ cid, block }) => {
         return async () => {
@@ -176,7 +176,7 @@ export class FsBlockstore implements Blockstore {
     }
   }
 
-  async * getMany (source: AwaitIterable<CID>): AsyncIterable<Pair> {
+  async * getMany (source: AwaitIterable<CID>): AsyncGenerator<Pair> {
     yield * parallelBatch(
       map(source, key => {
         return async () => {
@@ -204,7 +204,7 @@ export class FsBlockstore implements Blockstore {
     }
   }
 
-  async * deleteMany (source: AwaitIterable<CID>): AsyncIterable<CID> {
+  async * deleteMany (source: AwaitIterable<CID>): AsyncGenerator<CID> {
     yield * parallelBatch(
       map(source, key => {
         return async () => {
@@ -231,7 +231,7 @@ export class FsBlockstore implements Blockstore {
     return true
   }
 
-  async * getAll (): AsyncIterable<Pair> {
+  async * getAll (): AsyncGenerator<Pair> {
     const pattern = `**/*${this.shardingStrategy.extension}`
       .split(path.sep)
       .join('/')

@@ -143,7 +143,6 @@ export class S3Blockstore extends BaseBlockstore {
         return new Uint8Array(buf, 0, buf.byteLength)
       }
 
-      // @ts-expect-error s3 types define their own Blob as an empty interface
       return await toBuffer(data.Body)
     } catch (err: any) {
       if (err.statusCode === 404) {
@@ -202,7 +201,7 @@ export class S3Blockstore extends BaseBlockstore {
     }
   }
 
-  async * getAll (options?: AbortOptions): AsyncIterable<Pair> {
+  async * getAll (options?: AbortOptions): AsyncGenerator<Pair> {
     const params: Record<string, any> = {}
 
     try {

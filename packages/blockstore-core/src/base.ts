@@ -11,7 +11,7 @@ export class BaseBlockstore implements Blockstore {
     return Promise.reject(new Error('.put is not implemented'))
   }
 
-  async * putMany (source: AwaitIterable<Pair>, options?: AbortOptions): AwaitIterable<CID> {
+  async * putMany (source: AwaitIterable<Pair>, options?: AbortOptions): AsyncGenerator<CID> {
     for await (const { cid, block } of source) {
       await this.put(cid, block, options)
       yield cid
@@ -22,7 +22,7 @@ export class BaseBlockstore implements Blockstore {
     return Promise.reject(new Error('.get is not implemented'))
   }
 
-  async * getMany (source: AwaitIterable<CID>, options?: AbortOptions): AwaitIterable<Pair> {
+  async * getMany (source: AwaitIterable<CID>, options?: AbortOptions): AsyncGenerator<Pair> {
     for await (const key of source) {
       yield {
         cid: key,
@@ -35,7 +35,7 @@ export class BaseBlockstore implements Blockstore {
     return Promise.reject(new Error('.delete is not implemented'))
   }
 
-  async * deleteMany (source: AwaitIterable<CID>, options?: AbortOptions): AwaitIterable<CID> {
+  async * deleteMany (source: AwaitIterable<CID>, options?: AbortOptions): AsyncGenerator<CID> {
     for await (const key of source) {
       await this.delete(key, options)
       yield key

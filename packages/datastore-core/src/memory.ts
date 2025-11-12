@@ -2,7 +2,7 @@ import { Key } from 'interface-datastore/key'
 import { NotFoundError } from 'interface-store'
 import { BaseDatastore } from './base.js'
 import type { Pair } from 'interface-datastore'
-import type { Await, AwaitIterable } from 'interface-store'
+import type { Await } from 'interface-store'
 
 export class MemoryDatastore extends BaseDatastore {
   private readonly data: Map<string, Uint8Array>
@@ -37,13 +37,13 @@ export class MemoryDatastore extends BaseDatastore {
     this.data.delete(key.toString())
   }
 
-  * _all (): AwaitIterable<Pair> {
+  async * _all (): AsyncGenerator<Pair> {
     for (const [key, value] of this.data.entries()) {
       yield { key: new Key(key), value }
     }
   }
 
-  * _allKeys (): AwaitIterable<Key> {
+  async * _allKeys (): AsyncGenerator<Key> {
     for (const key of this.data.keys()) {
       yield new Key(key)
     }

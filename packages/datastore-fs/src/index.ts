@@ -158,7 +158,7 @@ export class FsDatastore extends BaseDatastore {
     }
   }
 
-  async * putMany (source: AwaitIterable<Pair>): AsyncIterable<Key> {
+  async * putMany (source: AwaitIterable<Pair>): AsyncGenerator<Key> {
     yield * parallel(
       map(source, ({ key, value }) => {
         return async () => {
@@ -185,7 +185,7 @@ export class FsDatastore extends BaseDatastore {
     return data
   }
 
-  async * getMany (source: AwaitIterable<Key>): AsyncIterable<Pair> {
+  async * getMany (source: AwaitIterable<Key>): AsyncGenerator<Pair> {
     yield * parallel(
       map(source, key => {
         return async () => {
@@ -199,7 +199,7 @@ export class FsDatastore extends BaseDatastore {
     )
   }
 
-  async * deleteMany (source: AwaitIterable<Key>): AsyncIterable<Key> {
+  async * deleteMany (source: AwaitIterable<Key>): AsyncGenerator<Key> {
     yield * parallel(
       map(source, key => {
         return async () => {
@@ -242,7 +242,7 @@ export class FsDatastore extends BaseDatastore {
     }
   }
 
-  async * _all (q: Query): AsyncIterable<Pair> {
+  async * _all (q: Query): AsyncGenerator<Pair> {
     let prefix = q.prefix ?? '**'
 
     // strip leading slashes
@@ -275,7 +275,7 @@ export class FsDatastore extends BaseDatastore {
     }
   }
 
-  async * _allKeys (q: KeyQuery): AsyncIterable<Key> {
+  async * _allKeys (q: KeyQuery): AsyncGenerator<Key> {
     let prefix = q.prefix ?? '**'
 
     // strip leading slashes

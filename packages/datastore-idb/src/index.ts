@@ -164,7 +164,7 @@ export class IDBDatastore extends BaseDatastore {
     }
   }
 
-  async * query (q: Query): AsyncIterable<Pair> {
+  async * query (q: Query): AsyncGenerator<Pair> {
     let it = this.#queryIt(q, (key, value) => {
       return { key, value }
     })
@@ -180,7 +180,7 @@ export class IDBDatastore extends BaseDatastore {
     yield * it
   }
 
-  async * queryKeys (q: KeyQuery): AsyncIterable<Key> {
+  async * queryKeys (q: KeyQuery): AsyncGenerator<Key> {
     let it = this.#queryIt(q, (key) => key)
 
     if (Array.isArray(q.filters)) {
@@ -194,7 +194,7 @@ export class IDBDatastore extends BaseDatastore {
     yield * it
   }
 
-  async * #queryIt <T> (q: { prefix?: string, offset?: number, limit?: number }, transform: (key: Key, value: Uint8Array) => T): AsyncIterable<T> {
+  async * #queryIt <T> (q: { prefix?: string, offset?: number, limit?: number }, transform: (key: Key, value: Uint8Array) => T): AsyncGenerator<T> {
     if (this.db == null) {
       throw new Error('Datastore needs to be opened.')
     }

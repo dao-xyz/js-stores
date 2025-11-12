@@ -99,15 +99,15 @@ export class ShardingDatastore extends BaseDatastore {
     await this.child.delete(key, options)
   }
 
-  async * putMany (source: AwaitIterable<Pair>, options: AbortOptions = {}): AsyncIterable<Key> {
+  async * putMany (source: AwaitIterable<Pair>, options: AbortOptions = {}): AsyncGenerator<Key> {
     yield * this.child.putMany(source, options)
   }
 
-  async * getMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncIterable<Pair> {
+  async * getMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncGenerator<Pair> {
     yield * this.child.getMany(source, options)
   }
 
-  async * deleteMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncIterable<Key> {
+  async * deleteMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncGenerator<Key> {
     yield * this.child.deleteMany(source, options)
   }
 
@@ -115,7 +115,7 @@ export class ShardingDatastore extends BaseDatastore {
     return this.child.batch()
   }
 
-  query (q: Query, options?: AbortOptions): AsyncIterable<Pair> {
+  query (q: Query, options?: AbortOptions): AsyncGenerator<Pair> {
     const omitShard: QueryFilter = ({ key }) => key.toString() !== shardKey.toString()
 
     const tq: Query = {
@@ -125,10 +125,14 @@ export class ShardingDatastore extends BaseDatastore {
       ].concat(q.filters ?? [])
     }
 
-    return this.child.query(tq, options)
+    const iterable = this.child.query(tq, options)
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 
-  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncIterable<Key> {
+  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncGenerator<Key> {
     const omitShard: KeyQueryFilter = (key) => key.toString() !== shardKey.toString()
 
     const tq: KeyQuery = {
@@ -138,6 +142,10 @@ export class ShardingDatastore extends BaseDatastore {
       ].concat(q.filters ?? [])
     }
 
-    return this.child.queryKeys(tq, options)
+    const iterable = this.child.queryKeys(tq, options)
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 }

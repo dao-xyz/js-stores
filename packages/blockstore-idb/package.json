@@ -145,11 +145,11 @@
     "blockstore-core": "^5.0.0",
     "idb": "^8.0.0",
     "interface-blockstore": "^5.0.0",
-    "interface-store": "^6.0.0",
-    "multiformats": "^13.2.3"
+    "interface-store": "^7.0.1",
+    "multiformats": "^13.4.1"
   },
   "devDependencies": {
-    "aegir": "^44.1.1",
+    "aegir": "^47.0.24",
     "interface-blockstore-tests": "^7.0.0"
   }
 }

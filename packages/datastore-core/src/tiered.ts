@@ -63,7 +63,7 @@ export class TieredDatastore extends BaseDatastore {
     }
   }
 
-  async * putMany (source: AwaitIterable<Pair>, options: AbortOptions = {}): AsyncIterable<Key> {
+  async * putMany (source: AwaitIterable<Pair>, options: AbortOptions = {}): AsyncGenerator<Key> {
     let error: Error | undefined
     const pushables = this.stores.map(store => {
       const source = pushable<Pair>({
@@ -94,7 +94,7 @@ export class TieredDatastore extends BaseDatastore {
     }
   }
 
-  async * deleteMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncIterable<Key> {
+  async * deleteMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncGenerator<Key> {
     let error: Error | undefined
     const pushables = this.stores.map(store => {
       const source = pushable<Key>({
@@ -143,11 +143,19 @@ export class TieredDatastore extends BaseDatastore {
     }
   }
 
-  query (q: Query, options?: AbortOptions): AwaitIterable<Pair> {
-    return this.stores[this.stores.length - 1].query(q, options)
+  query (q: Query, options?: AbortOptions): AsyncGenerator<Pair> {
+    const iterable = this.stores[this.stores.length - 1].query(q, options)
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 
-  queryKeys (q: KeyQuery, options?: AbortOptions): AwaitIterable<Key> {
-    return this.stores[this.stores.length - 1].queryKeys(q, options)
+  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncGenerator<Key> {
+    const iterable = this.stores[this.stores.length - 1].queryKeys(q, options)
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 }

@@ -178,7 +178,7 @@ export class LevelDatastore extends BaseDatastore {
     }
   }
 
-  query (q: Query): AsyncIterable<Pair> {
+  query (q: Query): AsyncGenerator<Pair> {
     let it = this._query({
       values: true,
       prefix: q.prefix
@@ -202,10 +202,14 @@ export class LevelDatastore extends BaseDatastore {
       it = take(it, limit)
     }
 
-    return it
+    const iterable = it
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 
-  queryKeys (q: KeyQuery): AsyncIterable<Key> {
+  queryKeys (q: KeyQuery): AsyncGenerator<Key> {
     let it = map(this._query({
       values: false,
       prefix: q.prefix
@@ -229,7 +233,11 @@ export class LevelDatastore extends BaseDatastore {
       it = take(it, limit)
     }
 
-    return it
+    const iterable = it
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 
   _query (opts: { values: boolean, prefix?: string }): AsyncIterable<Pair> {

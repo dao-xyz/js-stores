@@ -22,6 +22,7 @@
 
 import type {
   AbortOptions,
+  Await,
   AwaitIterable,
   Store
 } from 'interface-store'
@@ -35,7 +36,8 @@ export interface Pair {
 export interface Blockstore <HasOptionsExtension = {},
 PutOptionsExtension = {}, PutManyOptionsExtension = {},
 GetOptionsExtension = {}, GetManyOptionsExtension = {}, GetAllOptionsExtension = {},
-DeleteOptionsExtension = {}, DeleteManyOptionsExtension = {}> extends Store<CID, Uint8Array, Pair, HasOptionsExtension,
+DeleteOptionsExtension = {}, DeleteManyOptionsExtension = {}> extends Store<CID, Uint8Array, Await<Uint8Array>, Pair, Pair,
+  HasOptionsExtension,
   PutOptionsExtension, PutManyOptionsExtension,
   GetOptionsExtension, GetManyOptionsExtension,
   DeleteOptionsExtension, DeleteManyOptionsExtension> {

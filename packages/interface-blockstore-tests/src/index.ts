@@ -180,7 +180,7 @@ export function interfaceBlockstoreTests <B extends Blockstore = Blockstore> (te
       await store.put(cid, block)
       const source = [cid]
 
-      const res = await all(store.getMany(source))
+      const res: any = await all(store.getMany(source))
       expect(res).to.have.lengthOf(1)
       expect(res[0].cid).to.deep.equal(cid)
       expect(res[0].block).to.equalBytes(block)

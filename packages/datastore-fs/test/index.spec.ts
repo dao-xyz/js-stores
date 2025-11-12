@@ -11,6 +11,11 @@ import { FsDatastore } from '../src/index.js'
 
 const utf8Encoder = new TextEncoder()
 
+type WorkerApi = {
+  isReady: (path: string) => Promise<boolean>
+  put: (key: string, value: Uint8Array) => Promise<void>
+}
+
 describe('FsDatastore', () => {
   describe('construction', () => {
     it('defaults - folder missing', async () => {
@@ -181,7 +186,7 @@ describe('FsDatastore', () => {
     const dir = tempdir()
     const key = new Key('CIQGFTQ7FSI2COUXWWLOQ45VUM2GUZCGAXLWCTOKKPGTUWPXHBNIVOY')
     const workers = await Promise.all(new Array(10).fill(0).map(async () => {
-      const worker = await spawn(new Worker('./fixtures/writer-worker.js'))
+      const worker = await spawn<WorkerApi>(new Worker('./fixtures/writer-worker.js'))
       await worker.isReady(dir)
       return worker
     }))

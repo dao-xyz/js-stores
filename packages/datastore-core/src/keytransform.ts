@@ -39,7 +39,7 @@ export class KeyTransformDatastore extends BaseDatastore {
     await this.child.delete(this.transform.convert(key), options)
   }
 
-  async * putMany (source: AwaitIterable<Pair>, options: AbortOptions = {}): AsyncIterable<Key> {
+  async * putMany (source: AwaitIterable<Pair>, options: AbortOptions = {}): AsyncGenerator<Key> {
     const transform = this.transform
     const child = this.child
 
@@ -60,7 +60,7 @@ export class KeyTransformDatastore extends BaseDatastore {
     )
   }
 
-  async * getMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncIterable<Pair> {
+  async * getMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncGenerator<Pair> {
     const transform = this.transform
     const child = this.child
 
@@ -81,7 +81,7 @@ export class KeyTransformDatastore extends BaseDatastore {
     )
   }
 
-  async * deleteMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncIterable<Key> {
+  async * deleteMany (source: AwaitIterable<Key>, options: AbortOptions = {}): AsyncGenerator<Key> {
     const transform = this.transform
     const child = this.child
 
@@ -114,7 +114,7 @@ export class KeyTransformDatastore extends BaseDatastore {
     }
   }
 
-  query (q: Query, options?: AbortOptions): AsyncIterable<Pair> {
+  query (q: Query, options?: AbortOptions): AsyncGenerator<Pair> {
     const query: Query = {
       ...q
     }
@@ -140,15 +140,19 @@ export class KeyTransformDatastore extends BaseDatastore {
       })
     }
 
-    return map(this.child.query(query, options), ({ key, value }) => {
+    const iterable = map(this.child.query(query, options), ({ key, value }) => {
       return {
         key: this.transform.invert(key),
         value
       }
     })
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 
-  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncIterable<Key> {
+  queryKeys (q: KeyQuery, options?: AbortOptions): AsyncGenerator<Key> {
     const query = {
       ...q
     }
@@ -174,8 +178,12 @@ export class KeyTransformDatastore extends BaseDatastore {
       })
     }
 
-    return map(this.child.queryKeys(query, options), key => {
+    const iterable = map(this.child.queryKeys(query, options), key => {
       return this.transform.invert(key)
     })
+
+    return (async function * () {
+      yield * iterable
+    })()
   }
 }

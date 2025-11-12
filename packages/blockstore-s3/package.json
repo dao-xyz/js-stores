@@ -146,14 +146,14 @@
     "@aws-sdk/client-s3": "^3.651.0",
     "blockstore-core": "^5.0.0",
     "interface-blockstore": "^5.0.0",
-    "interface-store": "^6.0.0",
+    "interface-store": "^7.0.1",
     "it-to-buffer": "^4.0.7",
-    "multiformats": "^13.2.3",
+    "multiformats": "^13.4.1",
     "uint8arrays": "^5.1.0"
   },
   "devDependencies": {
     "@types/sinon": "^17.0.3",
-    "aegir": "^44.1.1",
+    "aegir": "^47.0.24",
     "interface-blockstore-tests": "^7.0.0",
     "p-defer": "^4.0.1",
     "sinon": "^19.0.2"

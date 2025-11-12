@@ -2,7 +2,7 @@ import { NotFoundError } from 'interface-store'
 import { BaseDatastore } from './base.js'
 import type { Pair } from 'interface-datastore'
 import type { Key } from 'interface-datastore/key'
-import type { Await, AwaitIterable } from 'interface-store'
+import type { Await } from 'interface-store'
 
 export class BlackHoleDatastore extends BaseDatastore {
   put (key: Key): Await<Key> {
@@ -21,11 +21,11 @@ export class BlackHoleDatastore extends BaseDatastore {
 
   }
 
-  * _all (): AwaitIterable<Pair> {
+  async * _all (): AsyncGenerator<Pair> {
 
   }
 
-  * _allKeys (): AwaitIterable<Key> {
+  async * _allKeys (): AsyncGenerator<Key> {
 
   }
 }

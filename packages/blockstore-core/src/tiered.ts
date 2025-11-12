@@ -65,7 +65,7 @@ export class TieredBlockstore extends BaseBlockstore {
     }
   }
 
-  async * putMany (source: AwaitIterable<Pair>, options: AbortOptions = {}): AsyncIterable<CID> {
+  async * putMany (source: AwaitIterable<Pair>, options: AbortOptions = {}): AsyncGenerator<CID> {
     let error: Error | undefined
     const pushables = this.stores.map(store => {
       const source = pushable<Pair>({
@@ -96,7 +96,7 @@ export class TieredBlockstore extends BaseBlockstore {
     }
   }
 
-  async * deleteMany (source: AwaitIterable<CID>, options: AbortOptions = {}): AsyncIterable<CID> {
+  async * deleteMany (source: AwaitIterable<CID>, options: AbortOptions = {}): AsyncGenerator<CID> {
     let error: Error | undefined
     const pushables = this.stores.map(store => {
       const source = pushable<CID>({

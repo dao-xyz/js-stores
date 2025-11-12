@@ -163,15 +163,15 @@
   },
   "dependencies": {
     "interface-blockstore": "^5.0.0",
-    "interface-store": "^6.0.0",
+    "interface-store": "^7.0.1",
     "it-glob": "^3.0.1",
     "it-map": "^3.1.1",
     "it-parallel-batch": "^3.0.6",
-    "multiformats": "^13.2.3",
+    "multiformats": "^13.4.1",
     "steno": "^4.0.2"
   },
   "devDependencies": {
-    "aegir": "^44.1.1",
+    "aegir": "^47.0.24",
     "interface-blockstore-tests": "^7.0.0",
     "threads": "^1.7.0"
   }

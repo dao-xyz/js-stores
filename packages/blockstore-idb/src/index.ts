@@ -21,7 +21,7 @@ import * as raw from 'multiformats/codecs/raw'
 import * as Digest from 'multiformats/hashes/digest'
 import type { IDBPDatabase } from 'idb'
 import type { Pair } from 'interface-blockstore'
-import type { AbortOptions, AwaitIterable } from 'interface-store'
+import type { AbortOptions } from 'interface-store'
 import type { MultibaseCodec } from 'multiformats/bases/interface'
 
 export interface IDBBlockstoreInit {
@@ -142,7 +142,7 @@ export class IDBBlockstore extends BaseBlockstore {
     }
   }
 
-  async * getAll (options?: AbortOptions): AwaitIterable<Pair> {
+  async * getAll (options?: AbortOptions): AsyncGenerator<Pair> {
     if (this.db == null) {
       throw new Error('Blockstore needs to be opened.')
     }

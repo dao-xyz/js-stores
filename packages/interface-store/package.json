@@ -1,6 +1,6 @@
 {
   "name": "interface-store",
-  "version": "6.0.2",
+  "version": "7.0.1",
   "description": "A generic interface for storing and retrieving data",
   "license": "Apache-2.0 OR MIT",
   "homepage": "https://github.com/ipfs/js-stores/tree/main/packages/interface-store#readme",
@@ -129,6 +129,6 @@
     "release": "aegir release"
   },
   "devDependencies": {
-    "aegir": "^44.1.1"
+    "aegir": "^47.0.24"
   }
 }

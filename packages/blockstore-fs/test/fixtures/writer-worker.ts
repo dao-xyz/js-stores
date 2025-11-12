@@ -4,7 +4,7 @@ import { FsBlockstore } from '../../src/index.js'
 
 let fs: FsBlockstore
 expose({
-  async isReady (path) {
+  async isReady (path: string) {
     fs = new FsBlockstore(path)
     try {
       await fs.open()
@@ -15,7 +15,7 @@ expose({
       throw err
     }
   },
-  async put (cidString, value) {
+  async put (cidString: string, value: Uint8Array) {
     const key = CID.parse(cidString)
     try {
       return await fs.put(key, value)

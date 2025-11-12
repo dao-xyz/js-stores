@@ -156,7 +156,6 @@ export class S3Datastore extends BaseDatastore {
         return new Uint8Array(buf, 0, buf.byteLength)
       }
 
-      // @ts-expect-error s3 types define their own Blob as an empty interface
       return await toBuffer(data.Body)
     } catch (err: any) {
       if (err.statusCode === 404) {
@@ -218,7 +217,7 @@ export class S3Datastore extends BaseDatastore {
   /**
    * Recursively fetches all keys from s3
    */
-  async * _listKeys (params: { Prefix?: string, StartAfter?: string }, options?: AbortOptions): AsyncIterable<Key> {
+  async * _listKeys (params: { Prefix?: string, StartAfter?: string }, options?: AbortOptions): AsyncGenerator<Key> {
     try {
       const data = await this.s3.send(
         new ListObjectsV2Command({
@@ -259,7 +258,7 @@ export class S3Datastore extends BaseDatastore {
     }
   }
 
-  async * _all (q: Query, options?: AbortOptions): AsyncIterable<Pair> {
+  async * _all (q: Query, options?: AbortOptions): AsyncGenerator<Pair> {
     for await (const key of this._allKeys({ prefix: q.prefix }, options)) {
       try {
         const res: Pair = {
@@ -277,7 +276,7 @@ export class S3Datastore extends BaseDatastore {
     }
   }
 
-  async * _allKeys (q: KeyQuery, options?: AbortOptions): AsyncIterable<Key> {
+  async * _allKeys (q: KeyQuery, options?: AbortOptions): AsyncGenerator<Key> {
     const prefix = [this.path, q.prefix ?? ''].filter(Boolean).join('/').replace(/\/\/+/g, '/')
 
     // Get all the keys via list object, recursively as needed
